@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "export": "nest export",
-    "build:netlify": "next build && next export",
+    "build:netlify": "next build",
     "start": "next start",
     "lint": "next lint"
   },
