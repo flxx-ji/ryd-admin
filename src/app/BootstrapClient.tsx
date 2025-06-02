@@ -9,8 +9,9 @@ export default function BootstrapClient() {
   useEffect(() => {
     // ⚠️ TypeScript ne trouve pas ce module, donc on ignore l'erreur
     // Cela permet de charger Bootstrap JS (tooltips, modals, etc.)
-    // @ts-ignore
+    // @ts-expect-error: Bootstrap JS n’a pas de types, mais ça fonctionne pour le client
     import('bootstrap/dist/js/bootstrap.bundle.min.js');
+
   }, []); // ← [] = on l’exécute une seule fois au montage
 
   // Pas besoin d'afficher quoi que ce soit, on retourne null
