@@ -11,18 +11,19 @@ import type { Moto } from '@/components/MotoForm';
 export default function EditMotoPage() {
   const { id } = useParams();
   const router = useRouter();
-  const [motoToEdit, setMotoToEdit] = useState(null);
+ const [motoToEdit, setMotoToEdit] = useState<Moto | null>(null);
+
 
   useEffect(() => {
     const fetchMoto = async () => {
       try {
         const motos = await getMotos();
-        const found = motos.find((moto: Moto) => moto.id === id);
+        const found: Moto |undefined =  motos.find((moto) => moto.id === id);
         if (!found) {
           toast.error("Moto introuvable.");
           router.push('/motos');
         } else {
-          setMotoToEdit(found);
+          setMotoToEdit(found );
         }
       } catch (e) {
   console.error('Erreur lors du chargement de la moto :', e);

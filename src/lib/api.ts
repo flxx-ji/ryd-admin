@@ -1,10 +1,13 @@
 import axios from 'axios';
+import type { RawMoto } from '@/types';
 
-// Base URL pour l'API
+/* -----------------------------
+   Base URL de l'API (Railway en prod, .env en dev)
+------------------------------ */
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ryd-backend2-production.up.railway.app';
 
 /* -----------------------------
-   TYPES
+   Interface Moto utilisée dans les formulaires
 ------------------------------ */
 export interface MotoData {
   nom: string;
@@ -18,15 +21,34 @@ export interface MotoData {
 }
 
 /* -----------------------------
-   GET — Liste des motos
+   GET — Récupérer toutes les motos
 ------------------------------ */
-export const getMotos = async () => {
-  const res = await axios.get(`${BASE_URL}/motos`);
-  return res.data;
-};
+export async function getMotos() {
+  try {
+    const res = await fetch(`${BASE_URL}/api/motos`);
+    if (!res.ok) throw new Error("Échec de la récupération des motos");
+
+    const motos: RawMoto[] = await res.json();
+
+    return motos.map((m) => ({
+      id: m._id,
+      nom: m.nom,
+      marque: m.marque,
+      image: m.image,
+      description: m.description || '',
+      tarif_1jour: m.tarifs?.unJour || 0,
+      tarif_3jours: m.tarifs?.deuxTroisJours || 0,
+      tarif_5jours: m.tarifs?.quatreCinqJours || 0,
+      tarif_semaine: m.tarifs?.uneSemaine || 0,
+    }));
+  } catch (error) {
+    console.error("Erreur getMotos:", error);
+    return [];
+  }
+}
 
 /* -----------------------------
-   POST — Créer une nouvelle moto
+   POST — Créer une moto
 ------------------------------ */
 export const createMoto = async (formData: FormData) => {
   try {
