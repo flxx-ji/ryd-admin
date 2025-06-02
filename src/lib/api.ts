@@ -29,12 +29,13 @@ export async function getMotos() {
     if (!res.ok) throw new Error("Échec de la récupération des motos");
 
     const motos: RawMoto[] = await res.json();
+    console.log("🛠️ Motos reçues du back :", motos);
 
     return motos.map((m) => ({
       id: m._id,
       nom: m.nom,
       marque: m.marque,
-      image: m.image,
+      image: m.image ? `${BASE_URL}${m.image}` : '',
       description: m.description || '',
       tarif_1jour: m.tarifs?.unJour || 0,
       tarif_3jours: m.tarifs?.deuxTroisJours || 0,
