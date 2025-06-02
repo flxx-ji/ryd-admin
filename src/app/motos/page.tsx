@@ -1,5 +1,3 @@
-// src/app/motos/page.tsx
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -29,10 +27,9 @@ export default function MotosPage() {
         const data = await getMotos();
         setMotos(data);
       } catch (error) {
-  console.error("Erreur lors du chargement des motos :", error);
-  toast.error("Erreur lors du chargement des motos.");
-}
-
+        console.error("Erreur lors du chargement des motos :", error);
+        toast.error("Erreur lors du chargement des motos.");
+      }
     };
 
     fetchMotos();
@@ -45,22 +42,36 @@ export default function MotosPage() {
       toast.success("Moto supprimée avec succès !");
       setMotos((prev) => prev.filter((m) => m.id !== id));
     } catch (e) {
-  console.error("Erreur lors de la suppression :", e);
-  toast.error("Erreur lors de la suppression.");
-}
-
+      console.error("Erreur lors de la suppression :", e);
+      toast.error("Erreur lors de la suppression.");
+    }
   };
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Liste des Motos</h2>
+      {/* Header + Bouton Ajouter */}
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold">Liste des Motos</h2>
+        <button
+          onClick={() => router.push('/motos/new')}
+          className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
+        >
+          ➕ Ajouter une moto
+        </button>
+      </div>
+
+      {/* Liste */}
       {motos.length === 0 ? (
         <p>Aucune moto trouvée.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {motos.map((moto) => (
             <div key={moto.id} className="border rounded p-4 shadow">
-              <img src={moto.image} alt={moto.nom} className="w-full h-48 object-cover mb-2 rounded" />
+              <img
+                src={moto.image}
+                alt={moto.nom}
+                className="w-full h-48 object-cover mb-2 rounded"
+              />
               <h3 className="text-lg font-semibold">{moto.nom}</h3>
               <p className="text-sm text-gray-600">{moto.marque}</p>
               <p className="text-sm mt-2">{moto.description}</p>
