@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL pour l'API
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ryd-backend2-production.up.railway.app';
 
 /* -----------------------------
    TYPES
