@@ -1,3 +1,4 @@
+import NavBar from '@/components/NavBar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import BootstrapClient from './BootstrapClient';
 
@@ -14,6 +15,8 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body>
+         {/* ✅ On affiche la barre de navigation */}
+        <NavBar />
         <BootstrapClient /> {/* C’est ici que tu le déclares */}
         {children}
       </body>
