@@ -90,3 +90,12 @@ export const deleteMoto = async (id: string) => {
     throw error;
   }
 };
+/*---------------------------------------------
+   GET BY ID - Récuperer les motos avec l'ID
+ ----------------------------------------------*/
+
+ export async function getMotoById(id: string): Promise<Moto> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/motos/${id}`);
+  if (!res.ok) throw new Error('Moto introuvable');
+  return res.json();
+}

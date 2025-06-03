@@ -1,5 +1,5 @@
 'use client';
-
+import { getMotoById } from '@/lib/api';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { getMotos } from '@/lib/api';
