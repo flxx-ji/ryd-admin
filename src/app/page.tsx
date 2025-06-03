@@ -1,8 +1,11 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import useRequireAdminAuth from '@/hooks/requireAuth'; // ✅ ajout
 
 export default function Dashboard() {
+  useRequireAdminAuth(); // 🔒 redirige vers /login si pas connecté
+
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -12,7 +15,7 @@ export default function Dashboard() {
       });
 
       if (res.ok) {
-        localStorage.removeItem('adminToken'); // important !
+        localStorage.removeItem('adminToken');
         router.push('/login');
       } else {
         alert('Erreur lors de la déconnexion');

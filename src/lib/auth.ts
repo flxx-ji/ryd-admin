@@ -1,5 +1,5 @@
 export async function loginAdmin(email: string, password: string): Promise<string> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/admin/login`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
@@ -8,10 +8,30 @@ export async function loginAdmin(email: string, password: string): Promise<strin
   });
 
   if (!res.ok) {
-    const error = await res.json();
-    throw new Error(error.message || 'Échec de la connexion');
+    let message = 'Échec de la connexion';
+    try {
+      const error = await res.json();
+      message = error.message || message;
+    } catch {
+      message = 'Erreur serveur ou réponse invalide';
+    }
+    throw new Error(message);
   }
 
   const data = await res.json();
-  return data.token; // 🧠 récupère le JWT
+  return data.token;
+}
+
+export function logoutAdmin() {
+  localStorage.removeItem('adminToken');
+  window.location.href = '/login'; // Redirige proprement
+}
+
+export function isAdminLoggedIn(): boolean {
+  const token = localStorage.getItem('adminToken');
+  return !!token;
+}
+
+export function getAdminToken(): string | null {
+  return localStorage.getItem('adminToken');
 }

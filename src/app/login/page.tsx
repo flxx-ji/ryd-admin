@@ -17,7 +17,7 @@ export default function LoginPage() {
       const token = await loginAdmin(email, motDePasse);
       if (token) {
         localStorage.setItem('adminToken', token);
-        router.push('/admin/dashboard'); // redirige après login
+        router.push('/'); // redirige après login
       }
     } catch (err) {
   if (err instanceof Error) {
