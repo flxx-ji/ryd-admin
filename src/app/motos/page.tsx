@@ -84,7 +84,7 @@ export default function MotosPage() {
               <div className="flex gap-2 mt-4">
                 <button
                   className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded"
-                  onClick={() => router.push(`/motos/edit/${moto.id}`)}
+                  onClick={() => router.push(`/motos/${moto.id}/edit`)}
                 >
                   Modifier
                 </button>
