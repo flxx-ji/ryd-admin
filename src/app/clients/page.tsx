@@ -1,3 +1,6 @@
+import HeaderAdmin from '@/components/HeaderAdmin';
+
+
 export default function ClientsPage() {
   return (
     <div className="p-6">
@@ -6,3 +9,4 @@ export default function ClientsPage() {
     </div>
   );
 }
+<HeaderAdmin />

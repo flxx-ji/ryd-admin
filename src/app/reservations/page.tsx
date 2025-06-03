@@ -1,3 +1,6 @@
+import HeaderAdmin from '@/components/HeaderAdmin';
+
+
 export default function ReservationsPage() {
   return (
     <div className="p-6">
@@ -6,3 +9,5 @@ export default function ReservationsPage() {
     </div>
   );
 }
+
+<HeaderAdmin />
