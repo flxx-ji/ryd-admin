@@ -1,5 +1,5 @@
 'use client';
-import HeaderAdmin from '@/components/HeaderAdmin';
+ 
 import { useEffect, useState } from 'react';
 import { getMotos, deleteMoto } from '@/lib/api';
 import { useRouter } from 'next/navigation';
@@ -49,7 +49,7 @@ export default function MotosPage() {
 
   return (
     <>
-      <HeaderAdmin />
+       
 
       <div className="p-6">
         {/* Header + Bouton Ajouter */}

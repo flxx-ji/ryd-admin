@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect } from 'react';
 import { createMoto, updateMoto } from '@/lib/api';
 import toast from 'react-hot-toast';
@@ -40,22 +42,32 @@ export default function MotoForm({ motoToEdit, onUpdate, onAdd }: Props) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
       const formData = new FormData();
       formData.append('nom', form.nom);
       formData.append('marque', form.marque);
       formData.append('description', form.description);
-      formData.append('tarif_1jour', form.tarif_1jour.toString());
-      formData.append('tarif_3jours', form.tarif_3jours.toString());
-      formData.append('tarif_5jours', form.tarif_5jours.toString());
-      formData.append('tarif_semaine', form.tarif_semaine.toString());
 
+      // ✅ Ajout des tarifs comme objet `tarifs`
+      formData.append(
+        'tarifs',
+        JSON.stringify({
+          unJour: form.tarif_1jour,
+          deuxTroisJours: form.tarif_3jours,
+          quatreCinqJours: form.tarif_5jours,
+          uneSemaine: form.tarif_semaine,
+        })
+      );
+
+      // ✅ Ajout de l'image seulement si c’est un fichier
       if (form.image instanceof File) {
         formData.append('image', form.image);
       }
 
-      if (motoToEdit) {
-        await updateMoto(motoToEdit.id!, formData);
+      // ✅ Update ou création
+      if (motoToEdit?.id) {
+        await updateMoto(motoToEdit.id, formData);
         toast.success('Moto mise à jour avec succès.');
         onUpdate(form);
       } else {
@@ -64,6 +76,7 @@ export default function MotoForm({ motoToEdit, onUpdate, onAdd }: Props) {
         onAdd();
       }
 
+      // Réinitialisation du formulaire
       setForm({
         nom: '',
         marque: '',
@@ -111,7 +124,7 @@ export default function MotoForm({ motoToEdit, onUpdate, onAdd }: Props) {
         className="form-control"
         accept="image/*"
         onChange={(e) => {
-          if (e.target.files) {
+          if (e.target.files && e.target.files[0]) {
             setForm({ ...form, image: e.target.files[0] });
           }
         }}

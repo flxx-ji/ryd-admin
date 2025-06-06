@@ -1,46 +1,56 @@
-// src/components/NavBar.tsx
-
-// On active le mode "client" car la Navbar utilise des interactions côté client (ex: collapse Bootstrap)
 'use client';
 
-// Import du composant Link natif de Next.js
-// Ce composant remplace les <a href=""> traditionnels pour éviter les rechargements de page complets.
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function NavBar() {
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('adminToken');
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const res = await fetch('/api/admin/logout', {
+        method: 'POST',
+      });
+
+      if (res.ok) {
+        localStorage.removeItem('adminToken');
+        router.push('/login');
+      } else {
+        alert('Erreur lors de la déconnexion');
+      }
+    } catch (err) {
+      console.error('Erreur logout', err);
+      alert('Erreur lors de la déconnexion');
+    }
+  };
+
   return (
-    // Composant Navbar Bootstrap
-    <nav className="navbar navbar-expand-lg bg-light mb-4">
-      <div className="container">
-        {/* Titre/logo de ta navbar, qui ramène à l'accueil */}
-        <Link className="navbar-brand" href="/">
+    <nav className="navbar navbar-expand-lg bg-light px-4 py-3 shadow-sm">
+      <div className="container-fluid d-flex justify-between items-center">
+        <Link className="navbar-brand font-bold" href="/">
           Admin RYD
         </Link>
 
-        {/* Conteneur des liens de navigation */}
-        <div className="collapse navbar-collapse">
-          <ul className="navbar-nav">
-            {/* Onglet vers la page des motos */}
-            <li className="nav-item">
-              <Link className="nav-link" href="/motos">
-                Motos
-              </Link>
-            </li>
+        <div className="d-flex align-items-center gap-3">
+          <Link className="nav-link" href="/motos">Motos</Link>
+          <Link className="nav-link" href="/clients">Clients</Link>
+          <Link className="nav-link" href="/reservations">Réservations</Link>
 
-            {/* Onglet vers la page des clients */}
-            <li className="nav-item">
-              <Link className="nav-link" href="/clients">
-                Clients
-              </Link>
-            </li>
-
-            {/* Onglet vers la page des réservations */}
-            <li className="nav-item">
-              <Link className="nav-link" href="/reservations">
-                Réservations
-              </Link>
-            </li>
-          </ul>
+          {isLoggedIn && (
+            <button
+              onClick={handleLogout}
+              className="btn btn-outline-danger btn-sm ms-3"
+            >
+              Déconnexion
+            </button>
+          )}
         </div>
       </div>
     </nav>

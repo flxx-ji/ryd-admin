@@ -1,14 +1,10 @@
 import axios from 'axios';
 import type { RawMoto } from '@/types';
 
-/* -----------------------------
-   Base URL de l'API (Railway en prod, .env en dev)
------------------------------- */
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://ryd-backend2-production.up.railway.app';
+/* 🌐 Base URL de l'API */
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-/* -----------------------------
-   Interface Moto utilisée dans les formulaires
------------------------------- */
+/* 📦 Format Moto utilisé dans le front */
 export interface MotoData {
   nom: string;
   marque: string;
@@ -20,8 +16,16 @@ export interface MotoData {
   tarif_semaine: number;
 }
 
+/* 🔐 Récupération du token admin depuis le localStorage */
+const getToken = (): string | null => {
+  if (typeof window !== 'undefined') {
+    return localStorage.getItem('adminToken');
+  }
+  return null;
+};
+
 /* -----------------------------
-   GET — Récupérer toutes les motos
+   ✅ GET — Toutes les motos (publique)
 ------------------------------ */
 export async function getMotos() {
   try {
@@ -29,7 +33,6 @@ export async function getMotos() {
     if (!res.ok) throw new Error("Échec de la récupération des motos");
 
     const motos: RawMoto[] = await res.json();
-    console.log("🛠️ Motos reçues du back :", motos);
 
     return motos.map((m) => ({
       id: m._id,
@@ -43,18 +46,31 @@ export async function getMotos() {
       tarif_semaine: m.tarifs?.uneSemaine || 0,
     }));
   } catch (error) {
-    console.error("Erreur getMotos:", error);
+    console.error("❌ Erreur getMotos:", error);
     return [];
   }
 }
 
 /* -----------------------------
-   POST — Créer une moto
+   ✅ GET — Moto par ID (publique)
+------------------------------ */
+export async function getMotoById(id: string): Promise<MotoData> {
+  const res = await fetch(`${BASE_URL}/api/motos/${id}`);
+  if (!res.ok) throw new Error('Moto introuvable');
+  return res.json();
+}
+
+/* -----------------------------
+   ✅ POST — Créer une moto (admin)
 ------------------------------ */
 export const createMoto = async (formData: FormData) => {
   try {
-    const response = await axios.post(`${BASE_URL}/admin/motos`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+    const token = getToken();
+    const response = await axios.post(`${BASE_URL}/api/admin/motos`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
     });
     return response.data;
   } catch (error) {
@@ -64,12 +80,16 @@ export const createMoto = async (formData: FormData) => {
 };
 
 /* -----------------------------
-   PUT — Modifier une moto
+   ✅ PUT — Modifier une moto (admin)
 ------------------------------ */
 export const updateMoto = async (id: string, motoData: FormData) => {
   try {
-    const res = await axios.put(`${BASE_URL}/admin/motos/${id}`, motoData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
+    const token = getToken();
+    const res = await axios.put(`${BASE_URL}/api/admin/motos/${id}`, motoData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
     });
     return res.data;
   } catch (error) {
@@ -79,23 +99,19 @@ export const updateMoto = async (id: string, motoData: FormData) => {
 };
 
 /* -----------------------------
-   DELETE — Supprimer une moto
+   ✅ DELETE — Supprimer une moto (admin)
 ------------------------------ */
 export const deleteMoto = async (id: string) => {
   try {
-    const res = await axios.delete(`${BASE_URL}/admin/motos/${id}`);
+    const token = getToken();
+    const res = await axios.delete(`${BASE_URL}/api/admin/motos/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return res.data;
   } catch (error) {
     console.error('❌ Erreur deleteMoto:', error);
     throw error;
   }
 };
-/*---------------------------------------------
-   GET BY ID - Récuperer les motos avec l'ID
- ----------------------------------------------*/
-
- export async function getMotoById(id: string): Promise<Moto> {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/motos/${id}`);
-  if (!res.ok) throw new Error('Moto introuvable');
-  return res.json();
-}
