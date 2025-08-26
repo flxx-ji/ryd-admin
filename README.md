@@ -1,3 +1,38 @@
+
+---
+
+## 🚀 Déploiement
+
+- Frontend : déployé sur **Netlify** (ou Vercel si besoin)
+- Données : récupérées via l’API REST (`/api/admin/...`) côté backend Express
+- Sécurité future : auth via JWT ou session NextAuth (version 2)
+
+---
+
+## ⚙️ Objectif à long terme
+
+- Interface simple, responsive et sans surcharge
+- Ajouter au fur et à mesure : export PDF, envoi de mail, vue statistique
+- Réutilisable sur d'autres projets (immobilier, conciergerie...)
+
+---
+
+## 🧪 Statut
+
+🚧 En cours d’itération – composant admin opérationnel mais peut encore évoluer rapidement.  
+✔️ Testé avec données mock et vraies requêtes API
+
+---
+
+
+
+
+
+
+
+
+
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
